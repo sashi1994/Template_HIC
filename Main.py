@@ -8,6 +8,8 @@ df = pd.DataFrame({
 })
 
 df["length_mm"] = UnitConverter.convert_vector(df["length_mm"] , "gravity", "m/s^2")
-df= UnitConverter.convert_value(1, "gravity", "m/s^2")
+s= UnitConverter.convert_value(1, "gravity", "m/s^2")
+
 
 print(df)
+print(s)

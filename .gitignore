@@ -1,0 +1,66 @@
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.venv/
+env.bak/
+*.env
+
+# IDE settings (PyCharm, VSCode, etc.)
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and temporary files
+*.log
+logs/
+
+# Database files
+*.sqlite3
+*.db
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg-info/
+
+# Docker files
+.docker/
+docker-compose.override.yml
+
+# Test result files
+.tox/
+.nox/
+.coverage
+coverage.xml
+nosetests.xml
+test-reports/
+
+# Dependency management
+pip-log.txt
+pip-selfcheck.json
+.mypy_cache/
+.pytest_cache/
+
+# Operating system specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Compiled files (from other languages, e.g., C, C++)
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe

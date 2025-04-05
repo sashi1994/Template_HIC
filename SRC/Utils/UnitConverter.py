@@ -10,7 +10,6 @@ class UnitConverter:
     def convert_vector(vector, from_unit:'str', to_unit:'str') -> pd:
         """
         Convert a list, tuple, or pandas Series of numbers from one unit to another.
-        Returns a list of converted magnitudes (floats).
         Raises:
             TypeError: if input is not a valid sequence
             ValueError: if units are not valid
@@ -26,19 +25,18 @@ class UnitConverter:
             pint.UnitRegistry().Unit(to_unit)
 
         except convert.UndefinedUnitError as e:
-            raise ValueError(f"Invalid unit: {e}")
+            raise ValueError(f"Typed Invalid unit: {e}")
 
-        # Convert
-
+        # Convert each value in vector 
         return [convert(value, from_unit).to(to_unit).magnitude for value in vector]
     
 
 
     @staticmethod
-    def convert_value(var, from_unit:'str', to_unit:'str') -> pd:
+    def convert_value(var, from_unit:'str', to_unit:'str') -> float:
         """
-        Convert a list, tuple, or pandas Series of numbers from one unit to another.
-        Returns a list of converted magnitudes (floats).
+        Convert a value from one unit to another.
+        Returns magnitudes (floats).
         Raises:
             TypeError: if input is not a valid sequence
             ValueError: if units are not valid
@@ -54,9 +52,9 @@ class UnitConverter:
             pint.UnitRegistry().Unit(to_unit)
 
         except pint.errors.UndefinedUnitError as e:
-            raise ValueError(f"Invalid unit: {e}")
+            raise ValueError(f"Typed Invalid unit: {e}")
 
-        # Convert each value in the vector or scalar
-        return convert(var, from_unit).to(to_unit).magnitude
+        # Convert each value
+        return float(convert(var, from_unit).to(to_unit).magnitude)
     
     
