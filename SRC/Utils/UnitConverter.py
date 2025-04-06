@@ -16,8 +16,8 @@ class UnitConverter:
         """
 
         # Check if vector is list-like
-        if not isinstance(vector, (list, tuple, pd.Series)):
-            raise TypeError("Input must be a list, tuple, or pandas Series.")
+        if not isinstance(vector, (pd.DataFrame)):
+            raise TypeError("Input must be a pandas Dataframe.")
 
         # Check if units are valid using Pint
         try:
@@ -27,8 +27,12 @@ class UnitConverter:
         except convert.UndefinedUnitError as e:
             raise ValueError(f"Typed Invalid unit: {e}")
 
+        converted_df = vector.copy()
+        for col in converted_df.select_dtypes(include='number').columns:
+            converted_df[col] = converted_df[col].apply(lambda x: convert(x, from_unit).to(to_unit).magnitude)
+
         # Convert each value in vector 
-        return [convert(value, from_unit).to(to_unit).magnitude for value in vector]
+        return converted_df
     
 
 

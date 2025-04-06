@@ -64,3 +64,6 @@ ehthumbs.db
 *.dylib
 *.dll
 *.exe
+
+# Operating system specific files
+*.html
