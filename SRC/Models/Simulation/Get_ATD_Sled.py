@@ -9,7 +9,7 @@ import glob                                             # Import glob for file p
 # ------------------------------ Class for Time Handling ------------------------------
 
 class Get_Time:
-    def __init__(self, Time_ID):
+    def __init__(self, Time_ID,directory):
         """
         Initialize Get_Time with a specific Time_ID.
         This class is responsible for retrieving and processing time series data.
@@ -17,6 +17,7 @@ class Get_Time:
         try:
             # Retrieve the ID from the Time_Info dictionary
             self.ID = Time_Info[Time_ID]
+            self.directory=directory
         except KeyError:
             # Raise an error if the Time ID is not found
             raise ValueError(f"Error: The Time ID '{Time_ID}' does not exist in Time_Info.")
@@ -26,18 +27,16 @@ class Get_Time:
         Calculate the timeseries for a simulation.
         :return: DataFrame containing the processed acceleration data.
         """
-        # Define the directory containing the data files
-        directory = "/Users/sashikiranmadugula/Documents/Coding/MME/Channel"
 
         # Change to the specified directory
-        os.chdir(directory)
+        os.chdir(self.directory)
 
         # Initialize a DataFrame to store the ATD data
         Dataframe = pd.DataFrame()
 
         # Process each .chn file in the directory
         for file in glob.glob("*.chn"):
-            channel_path = os.path.join(directory, file)
+            channel_path = os.path.join(self.directory, file)
 
             # Read the channel file
             with open(channel_path) as f:
@@ -45,8 +44,8 @@ class Get_Time:
             
             for line in datafile:
                 # Extract time vector details
-                if line[29:45] == "K0TIRS000000TI00":
-                    channel_file = os.path.join(directory, f"2641H.{line[16:28].strip()}")
+                if line[29:45] == "K0"+self.ID+"000000TI00":
+                    channel_file = os.path.join(self.directory, f"2641H.{line[16:28].strip()}")
                     
                     # Call Vector static method from Simulation_MME
                     Channel = Simulation_MME.Vector(channel_file)
@@ -59,7 +58,7 @@ class Get_Time:
 # ------------------------------ Class for ATD Handling ------------------------------
 
 class Get_ATD(Simulation_MME):
-    def __init__(self, ATD_ID):
+    def __init__(self, ATD_ID,directory):
         """
         Initialize Get_ATD with a specific ATD_ID.
         This class is used to retrieve and process data related to the ATD (Anthropomorphic Test Dummy).
@@ -68,6 +67,7 @@ class Get_ATD(Simulation_MME):
             # Retrieve the ID from the ATD_Info dictionary
             self.ID = ATD_Info[ATD_ID]
             self.body_parts = {'Head', 'Chest', 'Pelvis'}
+            self.directory=directory
 
         except KeyError:
             # Raise an error if the ATD ID is not found
@@ -84,19 +84,16 @@ class Get_ATD(Simulation_MME):
         """
         # Ensure the specified part exists
         self.check_part_exists(part)
-        
-        # Define the directory containing the data files
-        directory = "/Users/sashikiranmadugula/Documents/Coding/MME/Channel"
 
         # Change to the specified directory
-        os.chdir(directory)
+        os.chdir(self.directory)
 
         # Initialize a DataFrame to store the ATD data
         ATD_Dataframe = pd.DataFrame()
 
         # Process each .chn file in the directory
         for file in glob.glob("*.chn"):
-            channel_path = os.path.join(directory, file)
+            channel_path = os.path.join(self.directory, file)
 
             # Read the channel file
             with open(channel_path) as f:
@@ -113,7 +110,7 @@ class Get_ATD(Simulation_MME):
                         line[41:43] == 'AC' and
                         line[43:44] == Direction[coordinates]
                     ):
-                        channel_file = os.path.join(directory, f"2641H.{line[16:28].strip()}")
+                        channel_file = os.path.join(self.directory, f"2641H.{line[16:28].strip()}")
                         Channel = Simulation_MME.Vector(channel_file)
                         String = f"{Channel[0].strip()}_({Channel[2].strip()})"
                         ATD_Dataframe[String] = pd.to_numeric(Channel[3])
@@ -128,19 +125,16 @@ class Get_ATD(Simulation_MME):
         """
         # Ensure the specified part exists
         self.check_part_exists(part)
-        
-        # Define the directory containing the data files
-        directory = "/Users/sashikiranmadugula/Documents/Coding/MME/Channel"
 
         # Change to the specified directory
-        os.chdir(directory)
+        os.chdir(self.directory)
 
         # Initialize a DataFrame to store the ATD data
         ATD_Dataframe = pd.DataFrame()
 
         # Process each .chn file in the directory
         for file in glob.glob("*.chn"):
-            channel_path = os.path.join(directory, file)
+            channel_path = os.path.join(self.directory, file)
 
             # Read the channel file
             with open(channel_path) as f:
@@ -157,7 +151,7 @@ class Get_ATD(Simulation_MME):
                         line[41:43] == 'AV' and
                         line[43:44] == Direction[coordinates]
                     ):
-                        channel_file = os.path.join(directory, f"2641H.{line[16:28].strip()}")
+                        channel_file = os.path.join(self.directory, f"2641H.{line[16:28].strip()}")
                         Channel = Simulation_MME.Vector(channel_file)
                         String = f"{Channel[0].strip()}_({Channel[2].strip()})"
                         ATD_Dataframe[String] = pd.to_numeric(Channel[3])
@@ -168,7 +162,7 @@ class Get_ATD(Simulation_MME):
 # ------------------------------ Class for Sled Handling ------------------------------
 
 class Get_Sled(Simulation_MME):
-    def __init__(self, Sled_ID):
+    def __init__(self, Sled_ID,directory):
         """
         Initialize Get_Sled with a specific Sled_ID.
         This class is used to retrieve and process data related to the sled in the simulation.
@@ -177,6 +171,7 @@ class Get_Sled(Simulation_MME):
             # Retrieve the ID from the Sled_Info dictionary
             self.ID = Sled_Info[Sled_ID]
             self.body_parts = {'Base'}
+            self.directory=directory
         except KeyError:
             # Raise an error if the Sled ID is not found
             raise ValueError(f"Error: The Sled ID '{Sled_ID}' does not exist in Sled_Info.")
@@ -189,18 +184,16 @@ class Get_Sled(Simulation_MME):
         Calculate Pulse for the sled.
         :return: DataFrame containing the processed pulse data.
         """
-        # Define the directory containing the data files
-        directory = "/Users/sashikiranmadugula/Documents/Coding/MME/Channel"
 
         # Change to the specified directory
-        os.chdir(directory)
+        os.chdir(self.directory)
 
         # Initialize a DataFrame to store the sled data
         Sled_Dataframe = pd.DataFrame()
 
         # Process each .chn file in the directory
         for file in glob.glob("*.chn"):
-            channel_path = os.path.join(directory, file)
+            channel_path = os.path.join(self.directory, file)
 
             # Read the channel file
             with open(channel_path) as f:
@@ -216,7 +209,7 @@ class Get_Sled(Simulation_MME):
                     line[41:43] == 'AC' and
                     line[43:44] == Direction['X-Coordinate']
                 ):
-                    channel_file = os.path.join(directory, f"2641H.{line[16:28].strip()}")
+                    channel_file = os.path.join(self.directory, f"2641H.{line[16:28].strip()}")
                     Channel = Simulation_MME.Vector(channel_file)
                     String = f"{Channel[0].strip()}_({Channel[2].strip()})"
                     Sled_Dataframe[String] = pd.to_numeric(Channel[3])
@@ -231,19 +224,16 @@ class Get_Sled(Simulation_MME):
         """
         # Ensure the specified part exists
         self.check_part_exists(part)
-        
-        # Define the directory containing the data files
-        directory = "/Users/sashikiranmadugula/Documents/Coding/MME/Channel"
 
         # Change to the specified directory
-        os.chdir(directory)
+        os.chdir(self.directory)
 
         # Initialize a DataFrame to store the sled data
         Sled_Dataframe = pd.DataFrame()
 
         # Process each .chn file in the directory
         for file in glob.glob("*.chn"):
-            channel_path = os.path.join(directory, file)
+            channel_path = os.path.join(self.directory, file)
 
             # Read the channel file
             with open(channel_path) as f:
@@ -258,7 +248,7 @@ class Get_Sled(Simulation_MME):
                         line[41:43] == 'FO' and
                         line[43:44] == Direction[coordinates]
                     ):
-                        channel_file = os.path.join(directory, f"2641H.{line[16:28].strip()}")
+                        channel_file = os.path.join(self.directory, f"2641H.{line[16:28].strip()}")
                         Channel = Simulation_MME.Vector(channel_file)
                         String = f"{Channel[0].strip()}_({Channel[2].strip()})"
                         Sled_Dataframe[String] = pd.to_numeric(Channel[3])

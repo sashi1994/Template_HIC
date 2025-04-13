@@ -19,7 +19,7 @@ class Read_MME:
         :param dir_path: Path to the directory containing the Channel folder.
         '''
         global directory  # Use the global directory variable
-        self.directory = dir_path  # Store the directory path globally
+        self.directory = dir_path+"/Channel"  # Store the directory path
         
     
     def Simulation_Test_info(self) -> dict:
@@ -31,25 +31,28 @@ class Read_MME:
 
         for info in Time_Info:
             
-            Test_info[info] = Get_Time(info)  
+            Read = open(self.directory + '/' + '2641H.chn').readlines()  
+            Check = any(line[31:35] == Time_Info[info] and line[41:43] == 'TI' for line in Read)
+            
+            Test_info[info] = Get_Time(info,self.directory)  
             print(f"Time: {info} Channel found !!")   
         
         for info in ATD_Info:  
-            Read = open(self.directory + '/Channel' + '/' + '2641H.chn').readlines()  
 
+            Read = open(self.directory + '/' + '2641H.chn').readlines()  
             Check = any(line[29:31] == ATD_Info[info] and line[39:41] == 'HH' for line in Read)
 
             if Check is True:
-                Test_info[info] = Get_ATD(info)  
+                Test_info[info] = Get_ATD(info,self.directory)  
                 print(f"ATD: {info} found !!")  
 
-        for info in Sled_Info:  
-            Read = open(self.directory + '/Channel' + '/' + '2641H.chn').readlines()  
+        for info in Sled_Info: 
 
+            Read = open(self.directory + '/' + '2641H.chn').readlines()  
             Check = any(line[29:31] == Sled_Info[info] and line[31:35] == 'SETR' for line in Read)
 
             if Check is True:
-                Test_info[info] = Get_Sled(info)  
+                Test_info[info] = Get_Sled(info,self.directory)  
                 print(f"SLED {info} found !!")  
                    
         return Test_info  
